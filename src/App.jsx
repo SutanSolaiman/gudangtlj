@@ -27,17 +27,27 @@ function App() {
     };
   }, []);
 
-  async function api(payload) {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        token: API_TOKEN,
-        ...payload
-      })
-    });
+async function api(payload) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    redirect: "follow",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      token: API_TOKEN,
+      ...payload
+    })
+  });
 
-    return await res.json();
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    throw new Error("Response bukan JSON: " + text.slice(0, 120));
   }
+}
 
   async function startScanner() {
     try {
