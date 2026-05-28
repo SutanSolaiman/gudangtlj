@@ -252,7 +252,7 @@ function beep(freq, duration) {
 
   return (
     <div className="app">
-      <h1>Scanner Gudang</h1>
+      <h1>Scanner Gudang TLJ</h1>
 
       <div id="reader"></div>
 
