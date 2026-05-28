@@ -202,10 +202,11 @@ function App() {
 
       <div id="reader"></div>
 
-      <div className="manual">
-        <input id="manualQr" placeholder="Manual QR: BAHAN|BB-0004" />
-        <button onClick={manualScan}>SCAN MANUAL</button>
-      </div>
+    <details className="manual">
+  <summary>Manual QR</summary>
+  <input id="manualQr" placeholder="BAHAN|BB-0004" />
+  <button onClick={manualScan}>SCAN</button>
+</details>
 
       <div className={"status " + status}>{message}</div>
 
