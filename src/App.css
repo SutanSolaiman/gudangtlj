@@ -1,1 +1,102 @@
 
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+}
+
+#reader {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.status {
+  padding: 14px;
+  border-radius: 12px;
+  background: #333;
+  text-align: center;
+  font-weight: bold;
+  margin: 12px 0;
+  white-space: pre-line;
+}
+
+.status.success {
+  background: #0b6b2f;
+}
+
+.status.error {
+  background: #8b0000;
+}
+
+.card,
+.manual {
+  background: #222;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 16px;
+  border: 0;
+  border-radius: 12px;
+}
+
+.active {
+  background: #00a86b;
+  color: white;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 20px;
+  padding: 14px;
+  border: 0;
+  border-radius: 10px;
+  margin: 6px 0;
+}
+
+.qty {
+  background: #000;
+  padding: 18px;
+  text-align: center;
+  font-size: 42px;
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.confirm {
+  width: 100%;
+  margin-top: 14px;
+  background: #0077ff;
+  color: white;
+}
