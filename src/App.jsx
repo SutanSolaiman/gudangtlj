@@ -86,33 +86,46 @@ async function api(payload) {
   }
 
   async function handleScan(qrText) {
-    try {
-      setMessage("QR terbaca:\n" + qrText);
-      setStatus("");
+  if (scanLocked) return;
 
-      const result = await api({
-        action: "LOOKUP_QR",
-        qrText
-      });
+  setScanLocked(true);
 
-      if (!result.ok) {
-        errorSound();
-        setLookup(null);
-        setMessage(result.message);
-        setStatus("error");
-        return;
-      }
+  try {
+    setMessage("QR terbaca:\n" + qrText);
+    setStatus("");
 
-      successSound();
-      setLookup(result);
-      setMessage("QR valid.");
-      setStatus("success");
-    } catch (err) {
+    const result = await api({
+      action: "LOOKUP_QR",
+      qrText
+    });
+
+    if (!result.ok) {
       errorSound();
-      setMessage(err.message);
+      setLookup(null);
+      setMessage(result.message);
       setStatus("error");
+
+      setTimeout(() => setScanLocked(false), 2000);
+      return;
     }
+
+    successSound();
+    navigator.vibrate?.(80);
+
+    setLookup(result);
+    setMessage("QR valid.");
+    setStatus("success");
+
+    setTimeout(() => setScanLocked(false), 2500);
+
+  } catch (err) {
+    errorSound();
+    setMessage(err.message);
+    setStatus("error");
+
+    setTimeout(() => setScanLocked(false), 2000);
   }
+}
 
   function manualScan() {
     const text = document.getElementById("manualQr").value.trim();
