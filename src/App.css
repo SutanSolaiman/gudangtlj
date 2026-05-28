@@ -46,8 +46,19 @@ h1 {
 .manual {
   background: #222;
   border-radius: 12px;
-  padding: 14px;
+  padding: 10px;
   margin-bottom: 12px;
+}
+
+.manual summary {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.manual input {
+  margin-top: 10px;
 }
 
 .mode {
