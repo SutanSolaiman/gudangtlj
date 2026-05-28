@@ -8,6 +8,7 @@ const API_TOKEN = import.meta.env.VITE_GUDANG_API_TOKEN;
 
 function App() {
   const scannerRef = useRef(null);
+  const scanLockedRef = useRef(false);
 
   const [lookup, setLookup] = useState(null);
   const [mode, setMode] = useState("");
@@ -85,10 +86,11 @@ async function api(payload) {
     }
   }
 
-  async function handleScan(qrText) {
-  if (scanLocked) return;
 
-  setScanLocked(true);
+async function handleScan(qrText) {
+  if (scanLockedRef.current) return;
+
+  scanLockedRef.current = true;
 
   try {
     setMessage("QR terbaca:\n" + qrText);
@@ -105,7 +107,10 @@ async function api(payload) {
       setMessage(result.message);
       setStatus("error");
 
-      setTimeout(() => setScanLocked(false), 2000);
+      setTimeout(() => {
+        scanLockedRef.current = false;
+      }, 2000);
+
       return;
     }
 
@@ -116,16 +121,21 @@ async function api(payload) {
     setMessage("QR valid.");
     setStatus("success");
 
-    setTimeout(() => setScanLocked(false), 2500);
+    if (scannerRef.current) {
+      scannerRef.current.pause(true);
+    }
 
   } catch (err) {
     errorSound();
     setMessage(err.message);
     setStatus("error");
 
-    setTimeout(() => setScanLocked(false), 2000);
+    setTimeout(() => {
+      scanLockedRef.current = false;
+    }, 2000);
   }
 }
+  
 
   function manualScan() {
     const text = document.getElementById("manualQr").value.trim();
@@ -233,6 +243,18 @@ async function api(payload) {
 
       <div className={"status " + status}>{message}</div>
 
+<button
+  className="reset"
+  onClick={() => {
+    scanLockedRef.current = false;
+    scannerRef.current?.resume();
+    setMessage("Kamera aktif. Scan QR.");
+    setStatus("success");
+  }}
+>
+  SCAN LAGI
+</button>
+      
       {lookup && (
         <div className="card">
           <b>{lookup.type}</b>
