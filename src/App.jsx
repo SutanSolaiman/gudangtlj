@@ -9,6 +9,7 @@ const API_TOKEN = import.meta.env.VITE_GUDANG_API_TOKEN;
 function App() {
   const scannerRef = useRef(null);
   const scanLockedRef = useRef(false);
+  const audioCtxRef = useRef(null);
 
   const [lookup, setLookup] = useState(null);
   const [mode, setMode] = useState("");
@@ -200,34 +201,54 @@ async function handleScan(qrText) {
     setQty("");
   }
 
-  function successSound() {
-    beep(1000, 120);
-    setTimeout(() => beep(1200, 100), 130);
-  }
+  function scanSuccessSound() {
+  beep(1320, 55);
+  setTimeout(() => beep(1760, 70), 65);
+}
 
-  function errorSound() {
-    beep(180, 250);
-  }
+function successSound() {
+  beep(1320, 60);
+  setTimeout(() => beep(1760, 70), 70);
+  setTimeout(() => beep(2200, 80), 150);
+}
 
-  function beep(freq, duration) {
+function errorSound() {
+  beep(220, 180);
+  setTimeout(() => beep(180, 220), 190);
+}
+
+function unlockAudio() {
+  if (!audioCtxRef.current) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.frequency.value = freq;
-    gain.gain.value = 0.08;
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-
-    setTimeout(() => {
-      osc.stop();
-      ctx.close();
-    }, duration);
+    audioCtxRef.current = new AudioContext();
   }
+
+  if (audioCtxRef.current.state === "suspended") {
+    audioCtxRef.current.resume();
+  }
+}
+
+  
+function beep(freq, duration) {
+  unlockAudio();
+
+  const ctx = audioCtxRef.current;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration / 1000);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + duration / 1000);
+}
 
   return (
     <div className="app">
@@ -282,10 +303,27 @@ async function handleScan(qrText) {
         </div>
       )}
 
-      <div className="mode">
-        <button className={mode === "IN" ? "active" : ""} onClick={() => setMode("IN")}>IN</button>
-        <button className={mode === "OUT" ? "active" : ""} onClick={() => setMode("OUT")}>OUT</button>
-      </div>
+     <div className="mode">
+  <button
+    className={mode === "IN" ? "active" : ""}
+    onClick={() => {
+      unlockAudio();
+      setMode("IN");
+    }}
+  >
+    IN
+  </button>
+
+  <button
+    className={mode === "OUT" ? "active" : ""}
+    onClick={() => {
+      unlockAudio();
+      setMode("OUT");
+    }}
+  >
+    OUT
+  </button>
+</div>
 
       {mode === "IN" && (
         <div className="card">
@@ -303,7 +341,15 @@ async function handleScan(qrText) {
         <button onClick={clearQty}>C</button>
       </div>
 
-      <button className="confirm" onClick={confirmAction}>CONFIRM</button>
+     <button
+  className="confirm"
+  onClick={() => {
+    unlockAudio();
+    confirmAction();
+  }}
+>
+  CONFIRM
+</button>
     </div>
   );
 }
