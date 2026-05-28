@@ -115,7 +115,7 @@ async function handleScan(qrText) {
     }
 
     successSound();
-    navigator.vibrate?.(80);
+    navigator.vibrate?.(120);
 
     setLookup(result);
     setMessage("QR valid.");
@@ -201,7 +201,7 @@ async function handleScan(qrText) {
   }
 
   function successSound() {
-    beep(880, 120);
+    beep(1000, 120);
     setTimeout(() => beep(1200, 100), 130);
   }
 
