@@ -240,7 +240,7 @@ function beep(freq, duration) {
   osc.frequency.value = freq;
 
   gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + 0.01);
   gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration / 1000);
 
   osc.connect(gain);
