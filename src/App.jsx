@@ -302,14 +302,15 @@ function beep(freq, duration) {
           )}
         </div>
       )}
-{lookup.type === "RAK" && (
-  <>
+{lookup && lookup.type === "RAK" && (
+  <div className="card">
+    <b>RAK</b>
     <p>Kode Rak: {lookup.kodeRak}</p>
     <p>Nama Rak: {lookup.namaRak}</p>
     <p>Area: {lookup.area}</p>
     <p>Keterangan: {lookup.keterangan}</p>
     <p>Status: {lookup.aktif}</p>
-  </>
+  </div>
 )}
 
       
